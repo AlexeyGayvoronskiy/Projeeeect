@@ -21,10 +21,12 @@ private:
 	Image* life;
 	Image* pobeda;
 	Image* number[3];
+	Image* kirp;
+	Image* prozr;
 	int cond = 0;
 	int k = 0, h;
 	char q = 'p';
-	// Массив, обозначающий поле, и текущий игрок
+	int lvl;
 
 	void StartSettings()
 	{
@@ -47,7 +49,11 @@ private:
 		gameback = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\pole.bmp");
 		levelback = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\LevelSelection.bmp");
 		life = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\life.bmp");
+		SDL_SetColorKey(life->surf, SDL_SRCCOLORKEY, SDL_MapRGB(life->surf->format, 255, 255, 255));
 		pobeda = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\pobeda.bmp");
+		kirp = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\kirpichik.bmp");
+		prozr = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\prozrachniy.bmp");
+		lvl = 1;
 	}
 
 	void Reset()
@@ -107,13 +113,15 @@ public:
 				if (((x == 1) | (x == 2)) & (y == 5))
 				{
 					/*запускаем настройки*/
-					//cond = 3; 
 				}
 				if (((x == 2) | (x == 1)) & (y == 7))
 				{
 					game->Exit();
 				}
-
+			}
+			if (input->IsKeyDown('e'))
+			{
+				cond = 7;
 			}
 		}
 		if (cond == 1)
@@ -126,13 +134,23 @@ public:
 			FILE *in;
 
 			while (cond == 1){
-				in = fopen("C:\\Users\\user\\Desktop\\images\\text.txt", "r");
+				if (lvl == 1) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\text.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				int max = x[0];
+
 				for (int i = 0; i < 10; i++)
-					fscanf(in, "%i", (&x[0] + i));
-				//huevuy comentariy
+				{
+					if (x[i] > max)
+					{
+						max = x[i];
+					}
+				}
 				int a = 1, jump = 0, uppoint = 0, padaet = 1;//маркер того, что мы в процессе игры, прыжок, достижение верхней точки
 				int xp = 187, yp = 476, b = 0, c = 30;; //координаты пакмана, состояние летит вверх или вниз и ускорение
-
+				int stpr = 0; //переменная, которая означает, что наш пакмен начал набирать силу
 
 				//если a == 1 то мы находимяся в игре
 				while (a)
@@ -157,73 +175,94 @@ public:
 						cond = 0;
 					}
 					j = 0;
+					//двигаемся влево
 					if (input->IsKeyDown('f'))
 					{
 						j = -10;
 					}
-
+					//двигаемся вправо
 					if (input->IsKeyDown('g'))
 					{
 						j = 10;
 					}
+					//выходим из игры
 					if (input->IsKeyDown(SDLK_ESCAPE))
 					{
 						a = 0;
 						cond = 0;
 					}
-					if (input->IsKeyDown(SDLK_SPACE))
+					//производим прыжок 
+					//надо произвести модернизацию прыжка так, чтоб сила прыжка зависила от времени, которое была зажата клавиша пробела 
+					if (input->IsKeyDown(SDLK_SPACE) && (stpr <= 50))
+					{
+						stpr = stpr + 1;
+					}
+					if ((input->IsKeyUp(SDLK_SPACE)) && (stpr > 0))
 					{
 						jump = 1;
 					}
-					//время, которое мы находимся в прыжке
 
+
+
+					//время, которое мы находимся в прыжке
 					while (jump == 1)
 					{
-						/*j = 0;
+						j = 0;
+						//движение в стороны во время прыжка
 						if (input->IsKeyDown('f'))
 						{
-						j = -10;
+							j = -10;
 						}
-
 						if (input->IsKeyDown('g'))
 						{
-						j = 10;
+							j = 10;
 						}
-						input->Update();*/
+						input->Update();
+						//если мы стоим на препятствии
+						/*	if ((xp >= x[i] - 87) && (yp = y - 174) && (xp <= x[i]))
+						{
+						jump = 0;
+						stpr = 0;
+						}
+						yp = yp + stpr;
+						stpr--;
+						if (yp >= y + 174)
+						{
+						jump = 0;
+						}
+						*/
 						for (int i = 0; i < 10; i++){
 							if (xp >= x[i])
 							{
 								padaet = 1;
 							}
 						}
+						//условие на нахождение на препятствии
+						//напоминаем, что b является маркером указателя полета вверх или вниз
+						//надо вовсе избавиться от переменной padaet
+
 						if (padaet == 1)
 						{
-							if ((yp >= 200) & (b == 0))
+							//так себе условие, поскольку накладывает ненужное ограничение сверху на высоту прыжка 
+							yp = yp - stpr;
+							stpr--;
+							//условие которое следует заменить, поскольку оно немного мешает более высоким прыжкам
+							//теперь наш шарик не падает вниз, поскольку мы отменили один из важных ифов, который за это отвечал
+							//но скорее всего его вполне можно заменить некоторым другим условием
+							// b = 0 занчит летим вверх
+							//физика является немного ебнутой, поскольку мы определяем полеты вверх и вниз вместо того, чтоб дать общее состояние
+							//надо вообще убрать переменную b 
+							//физика стала чуть лучше, но осталось нехило доработать баланс
+
+							if (stpr <= 0)
 							{
-								yp = yp - c;
-								c--;
-							}
-							if (yp <= 200)
-							{
-								b = 1;
-								c = 1;
 								uppoint = 1;
 							}
-							if ((yp <= 476) & (b == 1))
-							{
-								yp = yp + c;
-								c++;
-							}
-							if (yp >= 476)
-							{
-								b = 0;
-								yp = 476;
-							}
-							if ((uppoint == 1) & (b == 0))
+							if ((uppoint == 1) && (yp >= y))
 							{
 								uppoint = 0;
 								jump = 0;
-								c = 30;
+								stpr = 0;
 							}
 						}
 						graphics->DrawImage(gameback, 0, 0);
@@ -237,22 +276,18 @@ public:
 							if ((((xp + 87) >= x[i]) && ((yp + 174) >= y)) && (xp <= x[i]))
 							{
 								padaet = 0;
-								c = 1;
+								stpr = 1;
 								yp = 304;
 							}
 							if (((xp - x[i])*(xp - x[i]) + (yp + 87 - y)*(yp + 87 - y)) <= 7569)
 							{
 								padaet = 0;
-								c = 1;
+								stpr = 1;
 							}
-							//отрисовка в прыжке
-
-
 							x[i] = x[i] - 10;
-
-
 							graphics->DrawImage(kirpich, x[i], y);
 						}
+						max = max - 10;
 						xp = xp + j;
 						Sleep(10);
 						graphics->DrawImage(packman, xp, yp);
@@ -263,25 +298,31 @@ public:
 
 
 
+
+
 					//отрисовка когда находимся на земле
 					xp = xp + j;
 					graphics->DrawImage(gameback, 0, 0);
-					for (int i = 0; i < 10; i++){
+					for (int i = 0; i < 10; i++)
+					{
 						x[i] = x[i] - 10;
 						graphics->DrawImage(kirpich, x[i], y);
 					}
+					max = max - 10;
 					Sleep(10);
 					for (int i = 0; i < lifes; i++)
 						graphics->DrawImage(life, (i * 131), 0);
 					graphics->DrawImage(packman, xp, yp);
 					graphics->Flip();
-					if (x[9] <= 0){
+					if (max <= 0)
+					{
 						cond = 2;
 						a = 0;
 					}
 				}
 			}
 		}
+
 		if (cond == 2)
 		{
 
@@ -291,7 +332,6 @@ public:
 				int x = input->GetButtonDownCoords().x / (GRID_SIZE_X / 4),
 					y = input->GetButtonDownCoords().y / (GRID_SIZE_Y / 7);
 
-				// Если мы нажали на пустую клетку
 				if (((x == 1) | (x == 2)) & (y == 1)) /*запускаем игру*/
 				{
 
@@ -324,88 +364,111 @@ public:
 
 		}
 
-		if (cond == 6)
+		//секретная разработка уровней
+		if (cond == 7)
 		{
-			if (k == 0)
+			int kirpichi[10];
+			int l = 0;
+			int postavlen[10];
+			for (int i = 0; i < 10; i++)
 			{
-				graphics->DrawImage(levelback, 0, 0);
-				graphics->Flip();
-			}
-			if (k < 4)
-			{
-				scanf_s("%c", &q);
+				kirpichi[i] = 0;
+				postavlen[i] = 0;
 			}
 
-			if (q == '1')
+			int x, y;
+			while (cond == 7)
 			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\one.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == '2')
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\two.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 3)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\three.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 4)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\four.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 5)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\five.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 6)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\six.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 7)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\seven.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 8)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\eight.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 9)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\nine.bmp");
-				k++;
-				q = -1;
-			}
-			if (q == 0)
-			{
-				number[k] = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\zero.bmp");
-				k++;
-				q = -1;
-			}
-			graphics->DrawImage(levelback, 0, 0);
-			if (k > 0)
-			{
-				for (int i = 0; i <= k - 1; i++)
+				input->Update();
+				graphics->DrawImage(gameback, 0, 0);
+				if (input->IsMouseButtonDown(1))
 				{
-					h = i;
-					graphics->DrawImage(number[h], 256 + 128 * h, 320);
+					x = input->GetButtonDownCoords().x,
+						y = input->GetButtonDownCoords().y;
 				}
+				for (int i = 0; i < 10; i++)
+				{
+					if (postavlen[i] == 0)
+						graphics->DrawImage(prozr, kirpichi[i], 627);
+					else if ((postavlen != 0) && (kirpichi[i] != 0))
+						graphics->DrawImage(kirp, kirpichi[i], 627);
+				}
+
+				if ((input->IsKeyDown('g')) && (postavlen[l] == 0))
+					kirpichi[l] = kirpichi[l] + 1;
+				if ((input->IsKeyDown('f')) && (postavlen[l] == 0))
+					kirpichi[l] = kirpichi[l] - 1;
+				if (input->IsKeyDown(SDLK_SPACE)) {
+					while (!input->IsKeyUp(SDLK_SPACE)){
+						input->Update();
+					}
+					postavlen[l] = (postavlen[l] + 1) % 2;
+				}
+				for (int i = 0; i< 10; i++) {
+					if ((x>kirpichi[i]) && (x < (kirpichi[i] + 10)) && (y < 650) && (y>620))
+						l = i;
+				}
+				if (input->IsKeyDown(SDLK_ESCAPE))
+					cond = 0;
 				graphics->Flip();
 			}
+
+			FILE *f = fopen("C:\\Users\\user\\Desktop\\images\\1.txt", "wb");
+			for (int i = 0; i < 10; i++)
+			{
+				kirpichi[i] = kirpichi[i] * 8.7;
+				if (postavlen[i] != 0)
+					fprintf(f, "%d\r\n", kirpichi[i]);
+			}
+			fclose(f);
+			//вывод мануала для разработчика 
+
+			//выводим движок создания уровней 
+			//все в шоколаде 
+
+		}
+
+
+
+		if (cond == 6)
+		{
+			graphics->DrawImage(levelback, 0, 0);
+			graphics->Flip();
+			if (input->IsMouseButtonDown(1)) {
+				int x = input->GetButtonDownCoords().x,
+					y = input->GetButtonDownCoords().y;
+				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>1) && ((x / (GRID_SIZE_X / 8)) < 2)){
+					lvl = 1;
+					cond = 1;
+				}
+				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>2) && ((x / (GRID_SIZE_X / 8)) < 3)){
+					lvl = 2;
+				}
+				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>3) && ((x / (GRID_SIZE_X / 8)) < 4)){
+					lvl = 3;
+				}
+				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>4) && ((x / (GRID_SIZE_X / 8)) < 5)){
+					lvl = 4;
+				}
+				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>5) && ((x / (GRID_SIZE_X / 8)) < 6)){
+					lvl = 5;
+				}
+				if ((y > 320) && (y < 448) && ((x / (GRID_SIZE_X / 8))>1) && ((x / (GRID_SIZE_X / 8)) < 2)){
+					lvl = 11;
+				}
+				if ((y > 320) && (y < 448) && ((x / (GRID_SIZE_X / 8))>2) && ((x / (GRID_SIZE_X / 8)) < 3)){
+					lvl = 12;
+				}
+				if ((y > 320) && (y < 448) && ((x / (GRID_SIZE_X / 8))>3) && ((x / (GRID_SIZE_X / 8)) < 4)){
+					lvl = 13;
+				}
+
+				if ((y > 650) && (y < 750) && ((x / (GRID_SIZE_X / 8))>1) && ((x / (GRID_SIZE_X / 8)) < 3)){
+					cond = 0;
+				}
+
+			}
+
 		}
 	}
 };
