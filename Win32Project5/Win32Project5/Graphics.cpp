@@ -1,9 +1,12 @@
 #include "Graphics.h"
 
+
+
 Graphics::Graphics(int width, int height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	Screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
 }
 
 Image* Graphics::NewImage(char* file)

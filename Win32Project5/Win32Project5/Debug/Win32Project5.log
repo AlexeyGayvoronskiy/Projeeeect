@@ -1,11 +1,21 @@
-﻿Build started 26.05.2016 2:31:26.
+﻿Build started 26.05.2016 17:26:48.
      1>Project "C:\Users\user\Desktop\ХХХОхуенный проектХХХ\Projeeeect\Win32Project5\Win32Project5\Win32Project5.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\SDL-1.2.15\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _CRT_SECURE_NO_WARNINGS /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\SDL-1.2.15\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _CRT_SECURE_NO_WARNINGS /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp Graphics.cpp Image.cpp Input.cpp Screen.cpp main.cpp
          main.cpp
-     1>c:\users\user\desktop\хххохуенный проектххх\projeeeect\win32project5\win32project5\main.cpp(419): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\user\desktop\хххохуенный проектххх\projeeeect\win32project5\win32project5\main.cpp(563): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\user\desktop\хххохуенный проектххх\projeeeect\win32project5\win32project5\main.cpp(574): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\user\desktop\хххохуенный проектххх\projeeeect\win32project5\win32project5\main.cpp(585): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
+         Graphics.cpp
+         Generating Code...
+         Compiling...
+         Screen.cpp
+         Input.cpp
+         Image.cpp
+         Game.cpp
+         Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\Projeeeect\Win32Project5\Debug\Win32Project5.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\SDL-1.2.15\lib\x86" SDL.lib SDLmain.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\Projeeeect\Win32Project5\Debug\Win32Project5.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\Projeeeect\Win32Project5\Debug\Win32Project5.lib" /MACHINE:X86 Debug\Game.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\Projeeeect\Win32Project5\Debug\Win32Project5.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\SDL-1.2.15\lib\x86" SDL.lib SDLmain.lib SDL_mixer.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\Projeeeect\Win32Project5\Debug\Win32Project5.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\user\Desktop\ХХХОхуенный проектХХХ\Projeeeect\Win32Project5\Debug\Win32Project5.lib" /MACHINE:X86 Debug\Game.obj
          Debug\Graphics.obj
          Debug\Image.obj
          Debug\Input.obj
@@ -16,4 +26,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.89
+Time Elapsed 00:00:04.33

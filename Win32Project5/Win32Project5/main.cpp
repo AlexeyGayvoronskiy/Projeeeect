@@ -23,10 +23,14 @@ private:
 	Image* number[3];
 	Image* kirp;
 	Image* prozr;
+	Image* titry;
+	Image* levelchng;
+	Image* enh;
+	Mix_Music *music = NULL;
 	int cond = 0;
 	int k = 0, h;
 	char q = 'p';
-	int lvl;
+	int lvl, dif = 10;
 
 	void StartSettings()
 	{
@@ -53,6 +57,10 @@ private:
 		pobeda = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\pobeda.bmp");
 		kirp = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\kirpichik.bmp");
 		prozr = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\prozrachniy.bmp");
+		titry = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\titry.bmp");
+		enh = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\ENH.bmp");
+		levelchng = graphics->NewImage("C:\\Users\\user\\Desktop\\images\\LevelChange.bmp");
+		music = Mix_LoadMUS("C:\\Users\\user\\Desktop\\Hermanos_Inglesos_Feat.wav");
 		lvl = 1;
 	}
 
@@ -93,6 +101,12 @@ public:
 			game->Exit();
 		if (cond == 0)
 		{
+			if (Mix_PlayingMusic() == 0)
+			{
+				//Запускаем проигрываение музыки
+				Mix_PlayMusic(music, -1);
+			}
+			lvl = 1;
 			graphics->DrawImage(back, 0, 0);
 			graphics->Flip();
 			if (input->IsMouseButtonDown(1))
@@ -112,11 +126,17 @@ public:
 				}
 				if (((x == 1) | (x == 2)) & (y == 5))
 				{
+					//Sleep(200);
+					cond = 4;
+					while (!input->IsMouseButtonUp(1))
+						input->Update();
 					/*запускаем настройки*/
 				}
 				if (((x == 2) | (x == 1)) & (y == 7))
 				{
 					game->Exit();
+					while (!input->IsMouseButtonUp(1))
+						input->Update();
 				}
 			}
 			if (input->IsKeyDown('e'))
@@ -135,7 +155,42 @@ public:
 
 			while (cond == 1){
 				if (lvl == 1) {
-					in = fopen("C:\\Users\\user\\Desktop\\images\\text.txt", "r");
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\1.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				if (lvl == 2) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\2.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				if (lvl == 3) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\3.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				if (lvl == 4) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\4.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				if (lvl == 5) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\5.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				if (lvl == 11) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\11.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				if (lvl == 12) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\12.txt", "r");
+					for (int i = 0; i < 10; i++)
+						fscanf(in, "%i", (&x[0] + i));
+				}
+				if (lvl == 13) {
+					in = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\13.txt", "r");
 					for (int i = 0; i < 10; i++)
 						fscanf(in, "%i", (&x[0] + i));
 				}
@@ -150,7 +205,8 @@ public:
 				}
 				int a = 1, jump = 0, uppoint = 0, padaet = 1;//маркер того, что мы в процессе игры, прыжок, достижение верхней точки
 				int xp = 187, yp = 476, b = 0, c = 30;; //координаты пакмана, состояние летит вверх или вниз и ускорение
-				int stpr = 0; //переменная, которая означает, что наш пакмен начал набирать силу
+				int stpr = 20; //переменная, которая означает, что наш пакмен начал набирать силу
+
 
 				//если a == 1 то мы находимяся в игре
 				while (a)
@@ -197,7 +253,7 @@ public:
 					{
 						stpr = stpr + 1;
 					}
-					if ((input->IsKeyUp(SDLK_SPACE)) && (stpr > 0))
+					if ((input->IsKeyUp(SDLK_SPACE)) && (stpr > 20))
 					{
 						jump = 1;
 					}
@@ -262,7 +318,7 @@ public:
 							{
 								uppoint = 0;
 								jump = 0;
-								stpr = 0;
+								stpr = 20;
 							}
 						}
 						graphics->DrawImage(gameback, 0, 0);
@@ -289,7 +345,7 @@ public:
 						}
 						max = max - 10;
 						xp = xp + j;
-						Sleep(10);
+						Sleep(dif);
 						graphics->DrawImage(packman, xp, yp);
 						for (int i = 0; i < lifes; i++)
 							graphics->DrawImage(life, (i * 131), 0);
@@ -309,7 +365,7 @@ public:
 						graphics->DrawImage(kirpich, x[i], y);
 					}
 					max = max - 10;
-					Sleep(10);
+					Sleep(dif);
 					for (int i = 0; i < lifes; i++)
 						graphics->DrawImage(life, (i * 131), 0);
 					graphics->DrawImage(packman, xp, yp);
@@ -334,7 +390,14 @@ public:
 
 				if (((x == 1) | (x == 2)) & (y == 1)) /*запускаем игру*/
 				{
-
+					if (lvl == 5)
+						cond = 3;
+					if (lvl == 13)
+						cond = 3;
+					if ((lvl != 5) && (lvl != 13)){
+						lvl = lvl + 1;
+						cond = 1;
+					}
 				}
 				if (((x == 1) | (x == 2)) & (y == 3))
 				{
@@ -343,6 +406,7 @@ public:
 				if (((x == 1) | (x == 2)) & (y == 5))
 				{
 					cond = 0;
+					Sleep(100);
 				}
 
 			}
@@ -353,12 +417,48 @@ public:
 		}
 		if (cond == 3)
 		{
+			graphics->DrawImage(titry, 0, 0);
+			graphics->Flip();
+			if (input->IsKeyDown(SDLK_ESCAPE))
+				cond = 0;
 
 		}
+		//запуск настроек
 		if (cond == 4)
 		{
+			graphics->DrawImage(enh, 0, 0);
+			graphics->Flip();
+			if (input->IsMouseButtonDown(1))
+			{
+				// Берем координаты нажатой клетки
+				int x = input->GetButtonDownCoords().x,
+					y = input->GetButtonDownCoords().y;
 
+				// Если мы нажали на пустую клетку
+				if ((x >= 200) && (x <= 700) && (y >= 200) && (y <= 350)) /*запускаем игру*/
+				{
+					dif = 10;
+					while (!input->IsMouseButtonUp(1))
+						input->Update();
+					cond = 0;
+				}
+				if ((x >= 200) && (x <= 700) && (y >= 400) && (y <= 550)) /*запускаем игру*/
+				{
+					dif = 8;
+					while (!input->IsMouseButtonUp(1))
+						input->Update();
+					cond = 0;
+				}
+				if ((x >= 200) && (x <= 700) && (y >= 600) && (y <= 750)) /*запускаем игру*/
+				{
+					dif = 6;
+					while (!input->IsMouseButtonUp(1))
+						input->Update();
+					cond = 0;
+				}
+			}
 		}
+
 		if (cond == 5)
 		{
 
@@ -376,8 +476,48 @@ public:
 				postavlen[i] = 0;
 			}
 
+			int b = 1;
+			int a = 1;
 			int x, y;
-			while (cond == 7)
+			int lvlch = 0;
+			while (b)
+			{
+				graphics->DrawImage(levelchng, 0, 0);
+				graphics->Flip();
+				input->Update();
+				if (input->IsMouseButtonDown(1))
+				{
+					x = input->GetButtonDownCoords().x,
+						y = input->GetButtonDownCoords().y;
+				}
+				if ((y > 320) && (y < 448) && (x > 128) && (x < 256))
+				{
+					lvlch = 1;
+					b = 0;
+					a = 1;
+				}
+				if ((y > 320) && (y < 448) && (x > 258) && (x < 386))
+				{
+					lvlch = 2;
+					b = 0;
+					a = 1;
+				}
+				if ((y > 320) && (y < 448) && (x > 388) && (x < 516))
+				{
+					lvlch = 3;
+					b = 0;
+					a = 1;
+				}
+
+				if ((y > 667) && ((x / (GRID_SIZE_X / 8)) < 2))
+				{
+					cond = 0;
+					a = 0;
+					b = 0;
+				}
+
+			}
+			while (a)
 			{
 				input->Update();
 				graphics->DrawImage(gameback, 0, 0);
@@ -398,29 +538,56 @@ public:
 					kirpichi[l] = kirpichi[l] + 1;
 				if ((input->IsKeyDown('f')) && (postavlen[l] == 0))
 					kirpichi[l] = kirpichi[l] - 1;
-				if (input->IsKeyDown(SDLK_SPACE)) {
-					while (!input->IsKeyUp(SDLK_SPACE)){
+				if (input->IsKeyDown(SDLK_SPACE))
+				{
+					while (!input->IsKeyUp(SDLK_SPACE))
+					{
 						input->Update();
 					}
 					postavlen[l] = (postavlen[l] + 1) % 2;
 				}
-				for (int i = 0; i< 10; i++) {
+				for (int i = 0; i< 10; i++)
+				{
 					if ((x>kirpichi[i]) && (x < (kirpichi[i] + 10)) && (y < 650) && (y>620))
 						l = i;
 				}
 				if (input->IsKeyDown(SDLK_ESCAPE))
-					cond = 0;
+					a = 0;
 				graphics->Flip();
 			}
-
-			FILE *f = fopen("C:\\Users\\user\\Desktop\\images\\1.txt", "wb");
-			for (int i = 0; i < 10; i++)
+			if (lvlch == 1)
 			{
-				kirpichi[i] = kirpichi[i] * 8.7;
-				if (postavlen[i] != 0)
-					fprintf(f, "%d\r\n", kirpichi[i]);
+				FILE *f = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\11.txt", "wb");
+				for (int i = 0; i < 10; i++)
+				{
+					kirpichi[i] = kirpichi[i] * 8.7;
+					if (postavlen[i] != 0)
+						fprintf(f, "%d\r\n", kirpichi[i]);
+				}
+				fclose(f);
 			}
-			fclose(f);
+			if (lvlch == 2)
+			{
+				FILE *f = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\12.txt", "wb");
+				for (int i = 0; i < 10; i++)
+				{
+					kirpichi[i] = kirpichi[i] * 8.7;
+					if (postavlen[i] != 0)
+						fprintf(f, "%d\r\n", kirpichi[i]);
+				}
+				fclose(f);
+			}
+			if (lvlch == 3)
+			{
+				FILE *f = fopen("C:\\Users\\user\\Desktop\\images\\lvls\\13.txt", "wb");
+				for (int i = 0; i < 10; i++)
+				{
+					kirpichi[i] = kirpichi[i] * 8.7;
+					if (postavlen[i] != 0)
+						fprintf(f, "%d\r\n", kirpichi[i]);
+				}
+				fclose(f);
+			}
 			//вывод мануала для разработчика 
 
 			//выводим движок создания уровней 
@@ -434,36 +601,53 @@ public:
 		{
 			graphics->DrawImage(levelback, 0, 0);
 			graphics->Flip();
-			if (input->IsMouseButtonDown(1)) {
+			if (input->IsMouseButtonDown(1))
+			{
 				int x = input->GetButtonDownCoords().x,
 					y = input->GetButtonDownCoords().y;
-				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>1) && ((x / (GRID_SIZE_X / 8)) < 2)){
+				if ((y > 100) && (y < 228) && (x > 128) && (x < 256))
+				{
 					lvl = 1;
 					cond = 1;
 				}
-				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>2) && ((x / (GRID_SIZE_X / 8)) < 3)){
+				if ((y > 100) && (y < 228) && (x > 258) && (x < 386))
+				{
 					lvl = 2;
+					cond = 1;
 				}
-				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>3) && ((x / (GRID_SIZE_X / 8)) < 4)){
+				if ((y > 100) && (y < 228) && (x > 388) && (x < 516))
+				{
 					lvl = 3;
+					cond = 1;
 				}
-				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>4) && ((x / (GRID_SIZE_X / 8)) < 5)){
+				if ((y > 100) && (y < 228) && (x > 518) && (x < 646))
+				{
 					lvl = 4;
+					cond = 1;
 				}
-				if ((y > 100) && (y < 228) && ((x / (GRID_SIZE_X / 8))>5) && ((x / (GRID_SIZE_X / 8)) < 6)){
+				if ((y > 100) && (y < 228) && (x > 648) && (x < 776))
+				{
 					lvl = 5;
+					cond = 1;
 				}
-				if ((y > 320) && (y < 448) && ((x / (GRID_SIZE_X / 8))>1) && ((x / (GRID_SIZE_X / 8)) < 2)){
+				if ((y > 320) && (y < 448) && (x > 128) && (x < 256))
+				{
 					lvl = 11;
+					cond = 1;
 				}
-				if ((y > 320) && (y < 448) && ((x / (GRID_SIZE_X / 8))>2) && ((x / (GRID_SIZE_X / 8)) < 3)){
+				if ((y > 320) && (y < 448) && (x > 258) && (x < 386))
+				{
 					lvl = 12;
+					cond = 1;
 				}
-				if ((y > 320) && (y < 448) && ((x / (GRID_SIZE_X / 8))>3) && ((x / (GRID_SIZE_X / 8)) < 4)){
+				if ((y > 320) && (y < 448) && (x > 388) && (x < 516))
+				{
 					lvl = 13;
+					cond = 1;
 				}
 
-				if ((y > 650) && (y < 750) && ((x / (GRID_SIZE_X / 8))>1) && ((x / (GRID_SIZE_X / 8)) < 3)){
+				if ((y > 667) && ((x / (GRID_SIZE_X / 8)) < 2))
+				{
 					cond = 0;
 				}
 
@@ -479,4 +663,3 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	Game game;
 	return game.Execute(new TicTacToeScreen(), GRID_SIZE_X, GRID_SIZE_Y);
 }
-

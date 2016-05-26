@@ -5,6 +5,7 @@
 
 #include <Windows.h>
 #include <SDL.h>
+#include "SDL_mixer.h"
 
 #include "Game.h"
 #include "Graphics.h"
